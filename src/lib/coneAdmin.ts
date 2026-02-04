@@ -1,4 +1,4 @@
-import type { Checkpoint, CheckpointFormState, ConeFormState } from "../models/cone";
+import type { Checkpoint, CheckpointFormState, ConeFormState, ConeRegion } from "../models/cone";
 
 export function slugify(input: string) {
   return input
@@ -20,11 +20,16 @@ export function newCheckpointId() {
   return `cp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function isConeRegion(v: unknown): v is ConeRegion {
+  return v === "central" || v === "north" || v === "harbour" || v === "south";
+}
+
 export function validateCone(form: ConeFormState) {
   const errors: string[] = [];
-  if (!form.name.trim()) errors.push("Name is required.");
-  const slug = form.slug.trim() || slugify(form.name);
 
+  if (!form.name.trim()) errors.push("Name is required.");
+
+  const slug = form.slug.trim() || slugify(form.name);
   const lat = parseNum(form.lat);
   const lng = parseNum(form.lng);
   const radius = parseNum(form.radiusMeters);
@@ -37,7 +42,9 @@ export function validateCone(form: ConeFormState) {
   if (!Number.isFinite(radius) || radius < 10 || radius > 1000)
     errors.push("Radius should be 10–1000m.");
 
-  return { errors, slug, lat, lng, radius };
+  if (!isConeRegion(form.region)) errors.push("Region must be central, north, south or harbour.");
+
+  return { errors, slug, lat, lng, radius, region: form.region };
 }
 
 export function validateCheckpoints(rows: CheckpointFormState[]) {

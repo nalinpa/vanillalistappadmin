@@ -24,6 +24,26 @@ function TabLink({ to, label }: { to: string; label: string }) {
 export default function AdminLayout() {
   const state = useAdmin();
 
+   if (state.status === "error") {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 text-left">
+          <div className="font-semibold text-slate-900">Admin check failed</div>
+          <div className="mt-2 text-sm text-slate-600">{state.message}</div>
+          <div className="mt-4 text-xs text-slate-500">
+            This usually means Firestore rules are blocking reads on <code className="px-1 py-0.5 rounded bg-slate-100">admins/{state.user?.uid}</code>.
+          </div>
+          <button
+            onClick={() => signOut(auth)}
+            className="mt-5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
   if (state.status === "loading") {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">

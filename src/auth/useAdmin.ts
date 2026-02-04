@@ -7,7 +7,8 @@ export type AdminState =
   | { status: "loading" }
   | { status: "signedOut" }
   | { status: "notAdmin"; user: User }
-  | { status: "admin"; user: User };
+  | { status: "admin"; user: User }
+  | { status: "error"; message: string; user?: User };
 
 export function useAdmin(): AdminState {
   const [state, setState] = useState<AdminState>({ status: "loading" });
@@ -18,10 +19,22 @@ export function useAdmin(): AdminState {
         setState({ status: "signedOut" });
         return;
       }
-      const adminRef = doc(db, "admins", user.uid);
-      const adminSnap = await getDoc(adminRef);
-      if (adminSnap.exists()) setState({ status: "admin", user });
-      else setState({ status: "notAdmin", user });
+
+      try {
+        const adminRef = doc(db, "admins", user.uid);
+        const adminSnap = await getDoc(adminRef);
+
+        if (adminSnap.exists()) setState({ status: "admin", user });
+        else setState({ status: "notAdmin", user });
+      } catch (e: any) {
+        console.error("useAdmin getDoc failed:", e);
+        // Don't hang forever — fall back to notAdmin (or surface an error page)
+        setState({
+          status: "error",
+          message: e?.message ?? "Failed to check admin status",
+          user,
+        });
+      }
     });
 
     return () => unsub();

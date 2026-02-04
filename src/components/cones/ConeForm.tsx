@@ -25,9 +25,11 @@ export function ConeForm({
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="p-4 border-b border-slate-100">
-        <div className="font-semibold text-slate-900">{selectedId ? "Edit cone" : "Create cone"}</div>
+        <div className="font-semibold text-slate-900">
+          {selectedId ? "Edit cone" : "Create cone"}
+        </div>
         <div className="text-xs text-slate-500 mt-1">
-          Tip: choose a reachable spot (sign/trig/viewpoint). Radius 60–120m.
+          Tip: lat/lng is the map marker. Add checkpoints for completion. Radius 60–120m.
         </div>
       </div>
 
@@ -55,6 +57,26 @@ export function ConeForm({
             placeholder="maungawhau-mt-eden"
           />
         </div>
+        <div>
+          <label className="text-sm font-medium text-slate-700">Region</label>
+          <select
+            value={form.region}
+            onChange={(e) => onChangeForm({ ...form, region: e.target.value as any })}
+            className={[
+              "mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2",
+              "text-slate-900 shadow-sm outline-none",
+              "focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400",
+            ].join(" ")}
+          >
+            <option value="central">Central</option>
+            <option value="north">North</option>
+            <option value="south">South</option>
+            <option value="harbour">Harbour</option>
+          </select>
+          <div className="text-xs text-slate-500 mt-1">
+            Used for filtering/badges later.
+          </div>
+        </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
@@ -65,6 +87,7 @@ export function ConeForm({
               placeholder="-36.879"
             />
           </div>
+
           <div>
             <label className="text-sm font-medium text-slate-700">Longitude</label>
             <Input
@@ -113,7 +136,9 @@ export function ConeForm({
         />
 
         <div className="flex gap-3 pt-1">
-          <PrimaryButton onClick={onSave}>{selectedId ? "Save changes" : "Create cone"}</PrimaryButton>
+          <PrimaryButton onClick={onSave}>
+            {selectedId ? "Save changes" : "Create cone"}
+          </PrimaryButton>
           <SecondaryButton type="button" onClick={onCancel}>
             Cancel
           </SecondaryButton>

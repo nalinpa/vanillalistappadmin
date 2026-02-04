@@ -40,12 +40,19 @@ export function ConeList({
             >
               <button onClick={() => onSelect(c.id)} className="text-left flex-1">
                 <div className="font-semibold text-slate-900">{c.name}</div>
+
                 <div className="mt-1 text-xs text-slate-600">
                   <span className="font-mono">{c.slug}</span>
+
+                  <span className="mx-2">•</span>
+                  <span className="uppercase">{(c as any).region ?? "—"}</span>
+
                   <span className="mx-2">•</span>
                   {c.lat},{c.lng}
+
                   <span className="mx-2">•</span>
                   {c.radiusMeters}m
+
                   <span className="mx-2">•</span>
                   {(c.checkpoints?.length ?? 0) > 0 ? (
                     <span>{c.checkpoints!.length} checkpoint(s)</span>

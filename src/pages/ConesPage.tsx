@@ -11,10 +11,11 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../firebase";
 
+import { db } from "../firebase";
 import type { CheckpointFormState, Cone, ConeFormState } from "../models/cone";
 import { validateCheckpoints, validateCone } from "../lib/coneAdmin";
+
 import { SecondaryButton } from "../components/ui/FormControls";
 import { ConeList } from "../components/cones/ConeList";
 import { ConeForm } from "../components/cones/ConeForm";
@@ -25,6 +26,7 @@ const emptyForm: ConeFormState = {
   lat: "",
   lng: "",
   radiusMeters: "80",
+  region: "central",
   active: true,
   description: "",
 };
@@ -32,9 +34,11 @@ const emptyForm: ConeFormState = {
 export default function ConesPage() {
   const [cones, setCones] = useState<Cone[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [form, setForm] = useState<ConeFormState>({ ...emptyForm });
   const [checkpoints, setCheckpoints] = useState<CheckpointFormState[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
   const [msg, setMsg] = useState<string>("");
 
   useEffect(() => {
@@ -50,16 +54,17 @@ export default function ConesPage() {
         console.error(err);
         setMsg(err.message);
         setLoading(false);
-      }
+      },
     );
     return () => unsub();
   }, []);
 
   const selected = useMemo(
     () => (selectedId ? cones.find((c) => c.id === selectedId) ?? null : null),
-    [cones, selectedId]
+    [cones, selectedId],
   );
 
+  // ✅ Use selected (not selectedId) so it updates if the doc changes
   useEffect(() => {
     if (!selected) return;
 
@@ -69,6 +74,7 @@ export default function ConesPage() {
       lat: String(selected.lat ?? ""),
       lng: String(selected.lng ?? ""),
       radiusMeters: String(selected.radiusMeters ?? "80"),
+      region: (selected.region as any) ?? "central",
       active: !!selected.active,
       description: selected.description ?? "",
     });
@@ -81,9 +87,9 @@ export default function ConesPage() {
         lat: String(cp.lat ?? ""),
         lng: String(cp.lng ?? ""),
         radiusMeters: String(cp.radiusMeters ?? "80"),
-      }))
+      })),
     );
-  }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selected]);
 
   function reset() {
     setSelectedId(null);
@@ -113,18 +119,21 @@ export default function ConesPage() {
       return;
     }
 
+    const hasCheckpoints = cpsTrimmed.length > 0;
+
     const basePayload: any = {
       name: form.name.trim(),
       slug: coneV.slug,
       lat: coneV.lat,
       lng: coneV.lng,
+
       radiusMeters: coneV.radius,
+      region: coneV.region,
+
       active: !!form.active,
       description: form.description.trim(),
       updatedAt: serverTimestamp(),
     };
-
-    const hasCheckpoints = cpsTrimmed.length > 0;
 
     try {
       if (selectedId) {
@@ -138,8 +147,12 @@ export default function ConesPage() {
             lng: cp.lng,
             radiusMeters: cp.radiusMeters,
           }));
+
+          // ✅ first checkpoint is canonical
+          payload.defaultCheckpointId = cpsV.parsed[0]?.id;
         } else {
           payload.checkpoints = deleteField();
+          payload.defaultCheckpointId = deleteField();
         }
 
         await updateDoc(doc(db, "cones", selectedId), payload);
@@ -155,8 +168,12 @@ export default function ConesPage() {
             lng: cp.lng,
             radiusMeters: cp.radiusMeters,
           }));
+
+          // ✅ first checkpoint is canonical
+          payload.defaultCheckpointId = cpsV.parsed[0]?.id;
         }
 
+        payload.createdAt = serverTimestamp();
         await addDoc(collection(db, "cones"), payload);
         setMsg("Created ✅");
       }
@@ -171,6 +188,7 @@ export default function ConesPage() {
   async function removeCone(id: string) {
     const ok = confirm("Delete this cone? This cannot be undone.");
     if (!ok) return;
+
     setMsg("");
     try {
       await deleteDoc(doc(db, "cones", id));
@@ -198,8 +216,11 @@ export default function ConesPage() {
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Cones</h1>
           <p className="text-sm text-slate-600 mt-1">
-            Add/edit Auckland cones (GPS point + radius). Users see only{" "}
+            Add/edit Auckland cones (map marker + completion checkpoints). Users see only{" "}
             <span className="font-medium">active</span> cones.
+          </p>
+          <p className="text-xs text-slate-500 mt-1">
+            Map pin always uses the cone’s latitude/longitude. Checkpoints are for completion only.
           </p>
         </div>
         <SecondaryButton onClick={reset}>New cone</SecondaryButton>
