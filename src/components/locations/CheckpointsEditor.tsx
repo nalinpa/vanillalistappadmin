@@ -1,23 +1,23 @@
-import type { CheckpointFormState, ConeFormState } from "../../models/cone";
-import { newCheckpointId } from "../../lib/coneAdmin";
+import type { CheckpointFormState, LocationFormState } from "../../models/location";
+import { newCheckpointId } from "../../lib/locationAdmin";
 import { Input, SecondaryButton } from "../ui/FormControls";
 
 type Props = {
-  coneForm: ConeFormState;
+  locationForm: LocationFormState;
   checkpoints: CheckpointFormState[];
   onChange: (next: CheckpointFormState[]) => void;
 };
 
-export function CheckpointsEditor({ coneForm, checkpoints, onChange }: Props) {
+export function CheckpointsEditor({ locationForm, checkpoints, onChange }: Props) {
   function addCheckpoint() {
     onChange([
       ...checkpoints,
       {
         id: newCheckpointId(),
         label: "",
-        lat: coneForm.lat || "",
-        lng: coneForm.lng || "",
-        radiusMeters: coneForm.radiusMeters || "80",
+        lat: locationForm.lat || "",
+        lng: locationForm.lng || "",
+        radiusMeters: locationForm.radiusMeters || "80",
       },
     ]);
   }
@@ -40,11 +40,11 @@ export function CheckpointsEditor({ coneForm, checkpoints, onChange }: Props) {
     onChange(checkpoints.map((r, i) => (i === index ? { ...r, ...patch } : r)));
   }
 
-  function copyFromCone(index: number) {
+  function copyFromLocation(index: number) {
     update(index, {
-      lat: coneForm.lat || checkpoints[index].lat,
-      lng: coneForm.lng || checkpoints[index].lng,
-      radiusMeters: coneForm.radiusMeters || checkpoints[index].radiusMeters,
+      lat: locationForm.lat || checkpoints[index].lat,
+      lng: locationForm.lng || checkpoints[index].lng,
+      radiusMeters: locationForm.radiusMeters || checkpoints[index].radiusMeters,
     });
   }
 
@@ -54,8 +54,8 @@ export function CheckpointsEditor({ coneForm, checkpoints, onChange }: Props) {
         <div>
           <div className="text-sm font-medium text-slate-700">Checkpoints</div>
           <div className="text-xs text-slate-500 mt-1">
-            If set, users complete the cone when inside any checkpoint circle. If empty,
-            the cone’s main lat/lng/radius is used.
+            If set, users complete the __ENTITY_SINGULAR__ when inside any checkpoint circle. If empty,
+            the __ENTITY_SINGULAR__’s main lat/lng/radius is used.
           </div>
         </div>
         <SecondaryButton type="button" onClick={addCheckpoint}>
@@ -65,7 +65,7 @@ export function CheckpointsEditor({ coneForm, checkpoints, onChange }: Props) {
 
       {checkpoints.length === 0 ? (
         <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
-          No checkpoints (mobile will fall back to the cone’s main location).
+          No checkpoints (mobile will fall back to the __ENTITY_SINGULAR__’s main location).
         </div>
       ) : (
         <div className="mt-3 space-y-3">
@@ -150,10 +150,10 @@ export function CheckpointsEditor({ coneForm, checkpoints, onChange }: Props) {
 
                 <button
                   type="button"
-                  onClick={() => copyFromCone(idx)}
+                  onClick={() => copyFromLocation(idx)}
                   className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                 >
-                  Copy from cone
+                  Copy from __ENTITY_SINGULAR__
                 </button>
               </div>
             </div>

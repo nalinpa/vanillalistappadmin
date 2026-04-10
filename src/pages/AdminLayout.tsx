@@ -24,7 +24,7 @@ function TabLink({ to, label }: { to: string; label: string }) {
 export default function AdminLayout() {
   const state = useAdmin();
 
-   if (state.status === "error") {
+  if (state.status === "error") {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 text-left">
@@ -61,16 +61,16 @@ export default function AdminLayout() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-semibold">
-              C
+              __APP_INITIAL__
             </div>
             <div>
-              <div className="font-semibold text-slate-900">Cones Admin</div>
-              <div className="text-xs text-slate-500">Manage cones + completions</div>
+              <div className="font-semibold text-slate-900">__APP_NAME__ Admin</div>
+              <div className="text-xs text-slate-500">Manage __ENTITY_PLURAL__ + completions</div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <TabLink to="/cones" label="Cones" />
+            <TabLink to="/locations" label="__ENTITY_PLURAL__" />
             {/* later: <TabLink to="/completions" label="Completions" /> */}
           </div>
 

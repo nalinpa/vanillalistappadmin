@@ -1,19 +1,19 @@
-import type { CheckpointFormState, ConeFormState } from "../../models/cone";
-import { slugify } from "../../lib/coneAdmin";
+import type { CheckpointFormState, LocationFormState } from "../../models/location";
+import { slugify } from "../../lib/locationAdmin";
 import { CheckpointsEditor } from "./CheckpointsEditor";
 import { Input, PrimaryButton, SecondaryButton, Textarea } from "../ui/FormControls";
 
 type Props = {
   selectedId: string | null;
-  form: ConeFormState;
+  form: LocationFormState;
   checkpoints: CheckpointFormState[];
-  onChangeForm: (next: ConeFormState) => void;
+  onChangeForm: (next: LocationFormState) => void;
   onChangeCheckpoints: (next: CheckpointFormState[]) => void;
   onSave: () => void;
   onCancel: () => void;
 };
 
-export function ConeForm({
+export function LocationForm({
   selectedId,
   form,
   checkpoints,
@@ -26,7 +26,7 @@ export function ConeForm({
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="p-4 border-b border-slate-100">
         <div className="font-semibold text-slate-900">
-          {selectedId ? "Edit cone" : "Create cone"}
+          {selectedId ? "Edit __ENTITY_SINGULAR__" : "Create __ENTITY_SINGULAR__"}
         </div>
         <div className="text-xs text-slate-500 mt-1">
           Tip: lat/lng is the map marker. Add checkpoints for completion. Radius 60–120m.
@@ -45,7 +45,7 @@ export function ConeForm({
                 slug: form.slug ? form.slug : slugify(e.target.value),
               })
             }
-            placeholder="Maungawhau / Mount Eden"
+            placeholder="e.g. Central Park"
           />
         </div>
 
@@ -54,27 +54,31 @@ export function ConeForm({
           <Input
             value={form.slug}
             onChange={(e) => onChangeForm({ ...form, slug: e.target.value })}
-            placeholder="maungawhau-mt-eden"
+            placeholder="central-park"
           />
         </div>
+
         <div>
           <label className="text-sm font-medium text-slate-700">Region</label>
-          <select
+          <Input
             value={form.region}
-            onChange={(e) => onChangeForm({ ...form, region: e.target.value as any })}
-            className={[
-              "mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2",
-              "text-slate-900 shadow-sm outline-none",
-              "focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400",
-            ].join(" ")}
-          >
-            <option value="central">Central</option>
-            <option value="north">North</option>
-            <option value="south">South</option>
-            <option value="harbour">Harbour</option>
-          </select>
+            onChange={(e) => onChangeForm({ ...form, region: e.target.value })}
+            placeholder="e.g. North, Downtown, West Side..."
+          />
           <div className="text-xs text-slate-500 mt-1">
             Used for filtering/badges later.
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-slate-700">Category</label>
+          <Input
+            value={form.category}
+            onChange={(e) => onChangeForm({ ...form, category: e.target.value })}
+            placeholder="e.g. Park, Museum, Trail..."
+          />
+          <div className="text-xs text-slate-500 mt-1">
+            Used for grouping in the app later.
           </div>
         </div>
 
@@ -87,7 +91,6 @@ export function ConeForm({
               placeholder="-36.879"
             />
           </div>
-
           <div>
             <label className="text-sm font-medium text-slate-700">Longitude</label>
             <Input
@@ -107,7 +110,6 @@ export function ConeForm({
               placeholder="80"
             />
           </div>
-
           <label className="flex items-center gap-2 text-sm text-slate-700 mt-6">
             <input
               type="checkbox"
@@ -130,14 +132,14 @@ export function ConeForm({
         </div>
 
         <CheckpointsEditor
-          coneForm={form}
+          locationForm={form}
           checkpoints={checkpoints}
           onChange={onChangeCheckpoints}
         />
 
         <div className="flex gap-3 pt-1">
           <PrimaryButton onClick={onSave}>
-            {selectedId ? "Save changes" : "Create cone"}
+            {selectedId ? "Save changes" : "Create __ENTITY_SINGULAR__"}
           </PrimaryButton>
           <SecondaryButton type="button" onClick={onCancel}>
             Cancel

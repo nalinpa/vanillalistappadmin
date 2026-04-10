@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+# 🛡️ App Admin Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The web-based administrative dashboard for managing the mobile app platform. This portal connects to the same Firebase backend as the mobile app, allowing your team to manage content, moderate users, and view platform analytics.
 
-Currently, two official plugins are available:
+## 🛠 Tech Stack
+* **Framework:** [Insert React / Next.js / Vite here]
+* **Styling:** [Insert Tailwind CSS / UI Library here]
+* **Backend / Database:** Firebase (Auth, Firestore, Storage)
+* **Hosting:** [Insert Firebase Hosting / Vercel here]
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Key Features
+* **Location Management:** Add, edit, or toggle the active status of generic locations and checkpoints.
+* **User Management:** View registered users, track completion metrics, and manage access.
+* **Content Moderation:** Review flagged user content (reviews/photos) and manage blocked users.
+* **Global Configuration:** Update global app settings and view high-level analytics.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Getting Started
 
-## Expanding the ESLint configuration
+### 1. Prerequisites
+Ensure you have the following installed on your local machine:
+* [Node.js](https://nodejs.org/) (v18 or higher recommended)
+* Git
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 2. Installation
+Clone the repository and install the dependencies:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# Clone the repository
+git clone [https://github.com/YourUsername/your-admin-repo-name.git](https://github.com/YourUsername/your-admin-repo-name.git)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Navigate into the project directory
+cd your-admin-repo-name
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Install dependencies
+npm install
+# or yarn install / pnpm install

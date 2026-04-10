@@ -1,4 +1,8 @@
-import type { Checkpoint, CheckpointFormState, ConeFormState, ConeRegion } from "../models/cone";
+import type {
+  Checkpoint,
+  CheckpointFormState,
+  LocationFormState,
+} from "../models/location";
 
 export function slugify(input: string) {
   return input
@@ -20,11 +24,7 @@ export function newCheckpointId() {
   return `cp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function isConeRegion(v: unknown): v is ConeRegion {
-  return v === "central" || v === "north" || v === "harbour" || v === "south";
-}
-
-export function validateCone(form: ConeFormState) {
+export function validateLocation(form: LocationFormState) {
   const errors: string[] = [];
 
   if (!form.name.trim()) errors.push("Name is required.");
@@ -35,16 +35,29 @@ export function validateCone(form: ConeFormState) {
   const radius = parseNum(form.radiusMeters);
 
   if (!slug) errors.push("Slug is required.");
+
   if (!Number.isFinite(lat) || lat < -90 || lat > 90)
     errors.push("Latitude must be between -90 and 90.");
+
   if (!Number.isFinite(lng) || lng < -180 || lng > 180)
     errors.push("Longitude must be between -180 and 180.");
+
   if (!Number.isFinite(radius) || radius < 10 || radius > 1000)
     errors.push("Radius should be 10–1000m.");
 
-  if (!isConeRegion(form.region)) errors.push("Region must be central, north, south or harbour.");
+  // Region and category are now free-text fields in the boilerplate
+  const region = (form.region || "").trim();
+  const category = (form.category || "").trim();
 
-  return { errors, slug, lat, lng, radius, region: form.region };
+  return {
+    errors,
+    slug,
+    lat,
+    lng,
+    radius,
+    region,
+    category,
+  };
 }
 
 export function validateCheckpoints(rows: CheckpointFormState[]) {
@@ -69,8 +82,10 @@ export function validateCheckpoints(rows: CheckpointFormState[]) {
 
     if (!Number.isFinite(lat) || lat < -90 || lat > 90)
       errors.push(`Checkpoint ${idx}: latitude must be between -90 and 90.`);
+
     if (!Number.isFinite(lng) || lng < -180 || lng > 180)
       errors.push(`Checkpoint ${idx}: longitude must be between -180 and 180.`);
+
     if (!Number.isFinite(radius) || radius < 5 || radius > 2000)
       errors.push(`Checkpoint ${idx}: radius should be 5–2000m.`);
 

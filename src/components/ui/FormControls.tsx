@@ -1,4 +1,3 @@
-// src/components/ui/FormControls.tsx
 import type React from "react";
 
 export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {

@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      nav("/cones");
+      nav("/locations");
     } catch (e: any) {
       setErr(e?.message ?? "Login failed");
     } finally {
@@ -28,9 +28,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
         <div className="mb-6">
-          <h1 className="text-xl font-semibold text-slate-900">Cones Admin</h1>
+          <h1 className="text-xl font-semibold text-slate-900">__APP_NAME__ Admin</h1>
           <p className="text-sm text-slate-600 mt-1">
-            Sign in to manage Auckland cone locations.
+            Sign in to manage __APP_NAME__ __ENTITY_PLURAL__.
           </p>
         </div>
 

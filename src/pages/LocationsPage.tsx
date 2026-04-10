@@ -11,47 +11,45 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-
 import { db } from "../firebase";
-import type { CheckpointFormState, Cone, ConeFormState } from "../models/cone";
-import { validateCheckpoints, validateCone } from "../lib/coneAdmin";
 
+import type { CheckpointFormState, Location, LocationFormState } from "../models/location";
+import { validateCheckpoints, validateLocation } from "../lib/locationAdmin";
 import { SecondaryButton } from "../components/ui/FormControls";
-import { ConeList } from "../components/cones/ConeList";
-import { ConeForm } from "../components/cones/ConeForm";
+import { LocationList } from "../components/locations/LocationList";
+import { LocationForm } from "../components/locations/LocationForm";
 
-const emptyForm: ConeFormState = {
+const emptyForm: LocationFormState = {
   name: "",
   slug: "",
   lat: "",
   lng: "",
   radiusMeters: "80",
-  region: "central",
+  region: "",
+  category: "",
   active: true,
   description: "",
 };
 
-export default function ConesPage() {
-  const [cones, setCones] = useState<Cone[]>([]);
+export default function LocationsPage() {
+  const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const [form, setForm] = useState<ConeFormState>({ ...emptyForm });
+  const [form, setForm] = useState<LocationFormState>({ ...emptyForm });
   const [checkpoints, setCheckpoints] = useState<CheckpointFormState[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
   const [msg, setMsg] = useState<string>("");
 
   useEffect(() => {
-    const q = query(collection(db, "cones"), orderBy("name"));
+    const q = query(collection(db, "__DB_COLLECTION__"), orderBy("name"));
     const unsub = onSnapshot(
       q,
       (snap) => {
-        const rows: Cone[] = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
-        setCones(rows);
+        const rows: Location[] = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+        setLocations(rows);
         setLoading(false);
       },
       (err) => {
-        console.error(err);
+        console.log(err);
         setMsg(err.message);
         setLoading(false);
       },
@@ -60,11 +58,10 @@ export default function ConesPage() {
   }, []);
 
   const selected = useMemo(
-    () => (selectedId ? cones.find((c) => c.id === selectedId) ?? null : null),
-    [cones, selectedId],
+    () => (selectedId ? locations.find((l) => l.id === selectedId) ?? null : null),
+    [locations, selectedId],
   );
 
-  // ✅ Use selected (not selectedId) so it updates if the doc changes
   useEffect(() => {
     if (!selected) return;
 
@@ -74,7 +71,8 @@ export default function ConesPage() {
       lat: String(selected.lat ?? ""),
       lng: String(selected.lng ?? ""),
       radiusMeters: String(selected.radiusMeters ?? "80"),
-      region: (selected.region as any) ?? "central",
+      region: (selected.region as any) ?? "",
+      category: ((selected as any).category as any) ?? "",
       active: !!selected.active,
       description: selected.description ?? "",
     });
@@ -101,9 +99,9 @@ export default function ConesPage() {
   async function save() {
     setMsg("");
 
-    const coneV = validateCone(form);
-    if (coneV.errors.length) {
-      setMsg(coneV.errors.join(" "));
+    const locV = validateLocation(form);
+    if (locV.errors.length) {
+      setMsg(locV.errors.join(" "));
       return;
     }
 
@@ -123,13 +121,12 @@ export default function ConesPage() {
 
     const basePayload: any = {
       name: form.name.trim(),
-      slug: coneV.slug,
-      lat: coneV.lat,
-      lng: coneV.lng,
-
-      radiusMeters: coneV.radius,
-      region: coneV.region,
-
+      slug: locV.slug,
+      lat: locV.lat,
+      lng: locV.lng,
+      radiusMeters: locV.radius,
+      region: locV.region,
+      category: locV.category,
       active: !!form.active,
       description: form.description.trim(),
       updatedAt: serverTimestamp(),
@@ -147,15 +144,13 @@ export default function ConesPage() {
             lng: cp.lng,
             radiusMeters: cp.radiusMeters,
           }));
-
-          // ✅ first checkpoint is canonical
           payload.defaultCheckpointId = cpsV.parsed[0]?.id;
         } else {
           payload.checkpoints = deleteField();
           payload.defaultCheckpointId = deleteField();
         }
 
-        await updateDoc(doc(db, "cones", selectedId), payload);
+        await updateDoc(doc(db, "__DB_COLLECTION__", selectedId), payload);
         setMsg("Saved ✅");
       } else {
         const payload: any = { ...basePayload };
@@ -168,13 +163,11 @@ export default function ConesPage() {
             lng: cp.lng,
             radiusMeters: cp.radiusMeters,
           }));
-
-          // ✅ first checkpoint is canonical
           payload.defaultCheckpointId = cpsV.parsed[0]?.id;
         }
 
         payload.createdAt = serverTimestamp();
-        await addDoc(collection(db, "cones"), payload);
+        await addDoc(collection(db, "__DB_COLLECTION__"), payload);
         setMsg("Created ✅");
       }
 
@@ -185,13 +178,13 @@ export default function ConesPage() {
     }
   }
 
-  async function removeCone(id: string) {
-    const ok = confirm("Delete this cone? This cannot be undone.");
+  async function removeLocation(id: string) {
+    const ok = confirm("Delete this __ENTITY_SINGULAR__? This cannot be undone.");
     if (!ok) return;
 
     setMsg("");
     try {
-      await deleteDoc(doc(db, "cones", id));
+      await deleteDoc(doc(db, "__DB_COLLECTION__", id));
       if (selectedId === id) reset();
       setMsg("Deleted ✅");
     } catch (e: any) {
@@ -203,7 +196,7 @@ export default function ConesPage() {
   async function toggleActive(id: string, active: boolean) {
     setMsg("");
     try {
-      await updateDoc(doc(db, "cones", id), { active, updatedAt: serverTimestamp() });
+      await updateDoc(doc(db, "__DB_COLLECTION__", id), { active, updatedAt: serverTimestamp() });
     } catch (e: any) {
       console.error(e);
       setMsg(e.message ?? "Error updating");
@@ -214,16 +207,16 @@ export default function ConesPage() {
     <div>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Cones</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">__ENTITY_PLURAL__</h1>
           <p className="text-sm text-slate-600 mt-1">
-            Add/edit Auckland cones (map marker + completion checkpoints). Users see only{" "}
-            <span className="font-medium">active</span> cones.
+            Add/edit __ENTITY_PLURAL__ (map marker + completion checkpoints). Users see only{" "}
+            <span className="font-medium">active</span> __ENTITY_PLURAL__.
           </p>
           <p className="text-xs text-slate-500 mt-1">
-            Map pin always uses the cone’s latitude/longitude. Checkpoints are for completion only.
+            Map pin always uses the __ENTITY_SINGULAR__’s latitude/longitude. Checkpoints are for completion only.
           </p>
         </div>
-        <SecondaryButton onClick={reset}>New cone</SecondaryButton>
+        <SecondaryButton onClick={reset}>New __ENTITY_SINGULAR__</SecondaryButton>
       </div>
 
       {msg && (
@@ -234,18 +227,18 @@ export default function ConesPage() {
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3">
-          <ConeList
-            cones={cones}
+          <LocationList
+            locations={locations}
             loading={loading}
             selectedId={selectedId}
             onSelect={setSelectedId}
-            onDelete={removeCone}
+            onDelete={removeLocation}
             onToggleActive={toggleActive}
           />
         </div>
 
         <div className="lg:col-span-2">
-          <ConeForm
+          <LocationForm
             selectedId={selectedId}
             form={form}
             checkpoints={checkpoints}
@@ -254,7 +247,6 @@ export default function ConesPage() {
             onSave={save}
             onCancel={reset}
           />
-
           <div className="mt-4 text-xs text-slate-500">
             You can later add a “Completions” page to review user completions + share bonuses.
           </div>

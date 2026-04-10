@@ -3,12 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAOU-6q6-gtArFqnYozB6Au1m3nbJH9Zr0",
-  authDomain: "cones-app-fd230.firebaseapp.com",
-  projectId: "cones-app-fd230",
-  storageBucket: "cones-app-fd230.firebasestorage.app",
-  messagingSenderId: "808761272356",
-  appId: "1:808761272356:web:2ff8099b11a8611dd390b1"
+  apiKey: "__FIREBASE_API_KEY__",
+  authDomain: "__FIREBASE_AUTH_DOMAIN__",
+  projectId: "__FIREBASE_PROJECT_ID__",
+  storageBucket: "__FIREBASE_STORAGE_BUCKET__",
+  messagingSenderId: "__FIREBASE_MESSAGING_SENDER_ID__",
+  appId: "__FIREBASE_APP_ID__"
 };
 
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
