@@ -1,8 +1,8 @@
 import type {
   Checkpoint,
   CheckpointFormState,
-  LocationFormState,
-} from "../models/location";
+  __Location__FormState,
+} from "../models/__location__";
 
 export function slugify(input: string) {
   return input
@@ -24,7 +24,7 @@ export function newCheckpointId() {
   return `cp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function validateLocation(form: LocationFormState) {
+export function validate__Location__(form: __Location__FormState) {
   const errors: string[] = [];
 
   if (!form.name.trim()) errors.push("Name is required.");

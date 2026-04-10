@@ -1,23 +1,23 @@
-import type { CheckpointFormState, LocationFormState } from "../../models/location";
-import { newCheckpointId } from "../../lib/locationAdmin";
+import type { CheckpointFormState, __Location__FormState } from "../../models/__location__";
+import { newCheckpointId } from "../../lib/__location__Admin";
 import { Input, SecondaryButton } from "../ui/FormControls";
 
 type Props = {
-  locationForm: LocationFormState;
+  __location__Form: __Location__FormState;
   checkpoints: CheckpointFormState[];
   onChange: (next: CheckpointFormState[]) => void;
 };
 
-export function CheckpointsEditor({ locationForm, checkpoints, onChange }: Props) {
+export function CheckpointsEditor({ __location__Form, checkpoints, onChange }: Props) {
   function addCheckpoint() {
     onChange([
       ...checkpoints,
       {
         id: newCheckpointId(),
         label: "",
-        lat: locationForm.lat || "",
-        lng: locationForm.lng || "",
-        radiusMeters: locationForm.radiusMeters || "80",
+        lat: __location__Form.lat || "",
+        lng: __location__Form.lng || "",
+        radiusMeters: __location__Form.radiusMeters || "80",
       },
     ]);
   }
@@ -40,11 +40,11 @@ export function CheckpointsEditor({ locationForm, checkpoints, onChange }: Props
     onChange(checkpoints.map((r, i) => (i === index ? { ...r, ...patch } : r)));
   }
 
-  function copyFromLocation(index: number) {
+  function copyFrom__Location__(index: number) {
     update(index, {
-      lat: locationForm.lat || checkpoints[index].lat,
-      lng: locationForm.lng || checkpoints[index].lng,
-      radiusMeters: locationForm.radiusMeters || checkpoints[index].radiusMeters,
+      lat: __location__Form.lat || checkpoints[index].lat,
+      lng: __location__Form.lng || checkpoints[index].lng,
+      radiusMeters: __location__Form.radiusMeters || checkpoints[index].radiusMeters,
     });
   }
 
@@ -150,7 +150,7 @@ export function CheckpointsEditor({ locationForm, checkpoints, onChange }: Props
 
                 <button
                   type="button"
-                  onClick={() => copyFromLocation(idx)}
+                  onClick={() => copyFrom__Location__(idx)}
                   className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
                 >
                   Copy from __ENTITY_SINGULAR__

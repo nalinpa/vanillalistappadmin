@@ -13,13 +13,13 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 
-import type { CheckpointFormState, Location, LocationFormState } from "../models/location";
-import { validateCheckpoints, validateLocation } from "../lib/locationAdmin";
+import type { CheckpointFormState, __Location__, __Location__FormState } from "../models/__location__";
+import { validateCheckpoints, validate__Location__ } from "../lib/__location__Admin";
 import { SecondaryButton } from "../components/ui/FormControls";
-import { LocationList } from "../components/locations/LocationList";
-import { LocationForm } from "../components/locations/LocationForm";
+import { __Location__List } from "../components/__locations__/__Location__List";
+import { __Location__Form } from "../components/__locations__/__Location__Form";
 
-const emptyForm: LocationFormState = {
+const emptyForm: __Location__FormState = {
   name: "",
   slug: "",
   lat: "",
@@ -31,10 +31,10 @@ const emptyForm: LocationFormState = {
   description: "",
 };
 
-export default function LocationsPage() {
-  const [locations, setLocations] = useState<Location[]>([]);
+export default function __Locations__Page() {
+  const [__locations__, set__Locations__] = useState<__Location__[]>([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState<LocationFormState>({ ...emptyForm });
+  const [form, setForm] = useState<__Location__FormState>({ ...emptyForm });
   const [checkpoints, setCheckpoints] = useState<CheckpointFormState[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [msg, setMsg] = useState<string>("");
@@ -44,8 +44,8 @@ export default function LocationsPage() {
     const unsub = onSnapshot(
       q,
       (snap) => {
-        const rows: Location[] = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
-        setLocations(rows);
+        const rows: __Location__[] = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+        set__Locations__(rows);
         setLoading(false);
       },
       (err) => {
@@ -58,8 +58,8 @@ export default function LocationsPage() {
   }, []);
 
   const selected = useMemo(
-    () => (selectedId ? locations.find((l) => l.id === selectedId) ?? null : null),
-    [locations, selectedId],
+    () => (selectedId ? __locations__.find((l) => l.id === selectedId) ?? null : null),
+    [__locations__, selectedId],
   );
 
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function LocationsPage() {
   async function save() {
     setMsg("");
 
-    const locV = validateLocation(form);
+    const locV = validate__Location__(form);
     if (locV.errors.length) {
       setMsg(locV.errors.join(" "));
       return;
@@ -178,7 +178,7 @@ export default function LocationsPage() {
     }
   }
 
-  async function removeLocation(id: string) {
+  async function remove__Location__(id: string) {
     const ok = confirm("Delete this __ENTITY_SINGULAR__? This cannot be undone.");
     if (!ok) return;
 
@@ -227,18 +227,18 @@ export default function LocationsPage() {
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3">
-          <LocationList
-            locations={locations}
+          <__Location__List
+            __locations__={__locations__}
             loading={loading}
             selectedId={selectedId}
             onSelect={setSelectedId}
-            onDelete={removeLocation}
+            onDelete={remove__Location__}
             onToggleActive={toggleActive}
           />
         </div>
 
         <div className="lg:col-span-2">
-          <LocationForm
+          <__Location__Form
             selectedId={selectedId}
             form={form}
             checkpoints={checkpoints}

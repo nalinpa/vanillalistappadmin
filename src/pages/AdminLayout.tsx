@@ -70,7 +70,7 @@ export default function AdminLayout() {
           </div>
 
           <div className="flex items-center gap-2">
-            <TabLink to="/locations" label="__ENTITY_PLURAL__" />
+            <TabLink to="/__locations__" label="__ENTITY_PLURAL__" />
             {/* later: <TabLink to="/completions" label="Completions" /> */}
           </div>
 

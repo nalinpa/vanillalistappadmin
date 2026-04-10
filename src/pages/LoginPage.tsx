@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      nav("/locations");
+      nav("/__locations__");
     } catch (e: any) {
       setErr(e?.message ?? "Login failed");
     } finally {

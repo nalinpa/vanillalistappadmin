@@ -1,7 +1,7 @@
-import type { Location } from "../../models/location";
+import type { __Location__ } from "../../models/__location__";
 
 type Props = {
-  locations: Location[];
+  __locations__: __Location__[];
   loading: boolean;
   selectedId: string | null;
   onSelect: (id: string) => void;
@@ -9,8 +9,8 @@ type Props = {
   onToggleActive: (id: string, active: boolean) => void;
 };
 
-export function LocationList({
-  locations,
+export function __Location__List({
+  __locations__,
   loading,
   selectedId,
   onSelect,
@@ -21,16 +21,16 @@ export function LocationList({
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="p-4 border-b border-slate-100 flex items-center justify-between">
         <div className="font-semibold text-slate-900">All __ENTITY_PLURAL__</div>
-        <div className="text-xs text-slate-500">{locations.length} total</div>
+        <div className="text-xs text-slate-500">{__locations__.length} total</div>
       </div>
 
       {loading ? (
         <div className="p-4 text-slate-600">Loading…</div>
-      ) : locations.length === 0 ? (
+      ) : __locations__.length === 0 ? (
         <div className="p-4 text-slate-600">No __ENTITY_PLURAL__ yet. Create your first one →</div>
       ) : (
         <div className="divide-y divide-slate-100">
-          {locations.map((loc) => (
+          {__locations__.map((loc) => (
             <div
               key={loc.id}
               className={[

@@ -1,19 +1,19 @@
-import type { CheckpointFormState, LocationFormState } from "../../models/location";
-import { slugify } from "../../lib/locationAdmin";
+import type { CheckpointFormState, __Location__FormState } from "../../models/____location____";
+import { slugify } from "../../lib/__location__Admin";
 import { CheckpointsEditor } from "./CheckpointsEditor";
 import { Input, PrimaryButton, SecondaryButton, Textarea } from "../ui/FormControls";
 
 type Props = {
   selectedId: string | null;
-  form: LocationFormState;
+  form: __Location__FormState;
   checkpoints: CheckpointFormState[];
-  onChangeForm: (next: LocationFormState) => void;
+  onChangeForm: (next: __Location__FormState) => void;
   onChangeCheckpoints: (next: CheckpointFormState[]) => void;
   onSave: () => void;
   onCancel: () => void;
 };
 
-export function LocationForm({
+export function __Location__Form({
   selectedId,
   form,
   checkpoints,
@@ -132,7 +132,7 @@ export function LocationForm({
         </div>
 
         <CheckpointsEditor
-          locationForm={form}
+          __location__Form={form}
           checkpoints={checkpoints}
           onChange={onChangeCheckpoints}
         />

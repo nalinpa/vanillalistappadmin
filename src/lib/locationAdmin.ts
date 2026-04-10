@@ -1,10 +1,10 @@
 import type {
   Checkpoint,
   CheckpointFormState,
-  ConeCategory,
-  ConeFormState,
-  ConeRegion,
-} from "../models/location";
+  __Location__Category,
+  __Location__FormState,
+  __Location__Region,
+} from "../models/__location__";
 
 export function slugify(input: string) {
   return input
@@ -26,7 +26,7 @@ export function newCheckpointId() {
   return `cp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function isConeRegion(v: unknown): v is ConeRegion {
+function is__Location__Region(v: unknown): v is __Location__Region {
   return (
     v === "central" ||
     v === "north" ||
@@ -36,11 +36,11 @@ function isConeRegion(v: unknown): v is ConeRegion {
   );
 }
 
-function isConeCategory(v: unknown): v is ConeCategory {
-  return v === "cone" || v === "crater" || v === "lake" || v === "other";
+function is__Location__Category(v: unknown): v is __Location__Category {
+  return v === "__;ocation__" || v === "other";
 }
 
-export function validateCone(form: ConeFormState) {
+export function validate__Location__(form: __Location__FormState) {
   const errors: string[] = [];
 
   if (!form.name.trim()) errors.push("Name is required.");
@@ -61,11 +61,11 @@ export function validateCone(form: ConeFormState) {
   if (!Number.isFinite(radius) || radius < 10 || radius > 1000)
     errors.push("Radius should be 10–1000m.");
 
-  if (!isConeRegion(form.region))
+  if (!is__Location__Region(form.region))
     errors.push("Region must be central, north, south, east or harbour.");
 
-  if (!isConeCategory(form.category))
-    errors.push("Category must be cone, crater, lake, or other.");
+  if (!is__Location__Category(form.category))
+    errors.push("Category must be __;ocation__, crater, lake, or other.");
 
   return {
     errors,
