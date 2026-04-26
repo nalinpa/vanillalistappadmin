@@ -7,6 +7,7 @@ const TARGET_ENTITY_PASCAL = 'Event';         // e.g., Event
 const TARGET_ENTITY_CAMEL = 'event';          // e.g., event
 const TARGET_ENTITY_PASCAL_PLURAL = 'Events'; // e.g., Events
 const TARGET_ENTITY_CAMEL_PLURAL = 'events';  // e.g., events
+const APP_NAME = 'Events App';            // e.g., EventsApp
 
 // 2. The mapping of placeholders found in your codebase to your new entity
 const REPLACEMENTS = {
@@ -14,7 +15,8 @@ const REPLACEMENTS = {
   '__location__': TARGET_ENTITY_CAMEL,
   '__Locations__': TARGET_ENTITY_PASCAL_PLURAL,
   '__locations__': TARGET_ENTITY_CAMEL_PLURAL,
-  '____location____': TARGET_ENTITY_CAMEL // Catching the typo found in LocationForm.tsx
+  '__APP_NAME__ ': APP_NAME,
+  '__ENTITY_PLURAL__': TARGET_ENTITY_PASCAL_PLURAL,
 };
 
 // Directories to ignore so we don't break node_modules or git

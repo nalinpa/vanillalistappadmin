@@ -207,10 +207,10 @@ export default function __Locations__Page() {
     <div>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">__ENTITY_PLURAL__</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">Dishes</h1>
           <p className="text-sm text-slate-600 mt-1">
-            Add/edit __ENTITY_PLURAL__ (map marker + completion checkpoints). Users see only{" "}
-            <span className="font-medium">active</span> __ENTITY_PLURAL__.
+            Add/edit Dishes (map marker + completion checkpoints). Users see only{" "}
+            <span className="font-medium">active</span> Dishes.
           </p>
           <p className="text-xs text-slate-500 mt-1">
             Map pin always uses the __ENTITY_SINGULAR__’s latitude/longitude. Checkpoints are for completion only.

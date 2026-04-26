@@ -1,4 +1,4 @@
-import type { CheckpointFormState, __Location__FormState } from "../../models/____location____";
+import type { CheckpointFormState, __Location__FormState } from "../../models/__location__";
 import { slugify } from "../../lib/__location__Admin";
 import { CheckpointsEditor } from "./CheckpointsEditor";
 import { Input, PrimaryButton, SecondaryButton, Textarea } from "../ui/FormControls";

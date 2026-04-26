@@ -64,13 +64,13 @@ export default function AdminLayout() {
               __APP_INITIAL__
             </div>
             <div>
-              <div className="font-semibold text-slate-900">__APP_NAME__ Admin</div>
-              <div className="text-xs text-slate-500">Manage __ENTITY_PLURAL__ + completions</div>
+              <div className="font-semibold text-slate-900">Dishes Admin</div>
+              <div className="text-xs text-slate-500">Manage Dishes + completions</div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <TabLink to="/__locations__" label="__ENTITY_PLURAL__" />
+            <TabLink to="/__locations__" label="Dishes" />
             {/* later: <TabLink to="/completions" label="Completions" /> */}
           </div>
 
