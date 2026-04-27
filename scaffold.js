@@ -15,8 +15,11 @@ const REPLACEMENTS = {
   '__location__': TARGET_ENTITY_CAMEL,
   '__Locations__': TARGET_ENTITY_PASCAL_PLURAL,
   '__locations__': TARGET_ENTITY_CAMEL_PLURAL,
-  '__APP_NAME__ ': APP_NAME,
   '__ENTITY_PLURAL__': TARGET_ENTITY_PASCAL_PLURAL,
+  '__ENTITY_SINGULAR__': TARGET_ENTITY_PASCAL,
+  '__APP_NAME__ ': APP_NAME,
+  '__APP_INITIAL__': APP_NAME.charAt(0).toUpperCase(),
+  '__DB_COLLECTION__': TARGET_ENTITY_CAMEL_PLURAL
 };
 
 // Directories to ignore so we don't break node_modules or git
