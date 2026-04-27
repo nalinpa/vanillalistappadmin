@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <AdminLayout />,
     children: [
-      { path: "__;ocation__s", element: <__Location__sPage /> },
+      { path: "__locations__", element: <__Location__sPage /> },
       // later: { path: "completions", element: <CompletionsPage /> },
     ],
   },
