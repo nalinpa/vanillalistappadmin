@@ -5,7 +5,7 @@ import NotAdminPage from "./pages/NotAdminPage";
 import __Location__sPage from "./pages/__Location__sPage";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <Navigate to="/__;ocation__s" replace /> },
+  { path: "/", element: <Navigate to="/__locations__" replace /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/not-admin", element: <NotAdminPage /> },
   {
