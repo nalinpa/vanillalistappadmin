@@ -1,80 +1,128 @@
 # 🛡️ App Admin Portal
 
-The web-based administrative dashboard for managing the mobile app platform. This portal connects to the same Firebase backend as the mobile app, allowing your team to manage content, moderate users, and view platform analytics.
+The web-based administrative dashboard for managing the mobile app platform. This portal connects to the same Firebase backend as the mobile app, allowing you to manage content, moderate users, and maintain the database.
 
 ## 🛠 Tech Stack
-* **Framework:** [Insert React / Next.js / Vite here]
-* **Styling:** [Insert Tailwind CSS / UI Library here]
-* **Backend / Database:** Firebase (Auth, Firestore, Storage)
-* **Hosting:** [Insert Firebase Hosting / Vercel here]
+* **Framework:** React + Vite (TypeScript)
+* **Styling:** Tailwind CSS
+* **Backend / Database:** Firebase (Auth, Firestore)
+* **Hosting:** Firebase Hosting / Vercel (Configurable)
 
 ## ✨ Key Features
-* **Location Management:** Add, edit, or toggle the active status of generic locations and checkpoints.
-* **User Management:** View registered users, track completion metrics, and manage access.
-* **Content Moderation:** Review flagged user content (reviews/photos) and manage blocked users.
-* **Global Configuration:** Update global app settings and view high-level analytics.
+* **Entity Management:** Add, edit, or toggle the active status of core database items and their completion checkpoints.
+* **Access Control:** Secure admin-only access governed by Firestore rules and dedicated user roles.
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
-Ensure you have the following installed on your local machine:
-* [Node.js](https://nodejs.org/) (v18 or higher recommended)
-* Git
+Follow these steps to set up a new instance of the admin portal from the boilerplate.
 
-### 2. Installation
-Clone the repository and install the dependencies:
+### 1. Local Setup
+Clone the repository and scaffold your specific entity (e.g., renaming the default template to match your app's data model).
 
 ```bash
-# Clone the repository
-git clone [https://github.com/YourUsername/your-admin-repo-name.git](https://github.com/YourUsername/your-admin-repo-name.git)
+# Clone the repository into a new folder
+git clone [https://github.com/YourUsername/boilerplate-admin.git](https://github.com/YourUsername/boilerplate-admin.git) my-new-admin
+cd my-new-admin
 
-# Navigate into the project directory
-cd your-admin-repo-name
+# Run the scaffolding script to rename files, folders, and code references
+node scaffold.js
 
 # Install dependencies
 npm install
-# or yarn install / pnpm install
+2. Firebase Configuration
+You need to connect this portal to your mobile app's Firebase project and configure an admin user.
+
+Go to the Firebase Console and select your existing project.
+
+Add a new Web App to the project to generate your configuration keys.
+
+Ensure Authentication (Email/Password) is enabled.
+
+Add a new user in the Authentication tab (this will be your admin login).
+
+Open Firestore Database and create a new collection called admins.
+
+Add a new document to the admins collection:
+
+Document ID: Must exactly match the UID of the user you just created in Auth.
+
+Fields: * email (string): The user's email address.
+
+role (string): "admin"
+
 3. Environment Variables
-Create a .env (or .env.local) file in the root directory. You will need the Firebase configuration keys from the project you created for the mobile app.
+Create a .env file in the root directory and add your Firebase configuration keys:
 
 Code snippet
-# Firebase Configuration
 VITE_FIREBASE_API_KEY=your_api_key_here
 VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your_project_id
 VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
-(Note: If using Next.js, change the prefix from VITE_ to NEXT_PUBLIC_)
+4. Initialize Your New Git Repository
+Disconnect from the boilerplate repository and push to your own new project.  
 
-4. Running Locally
+Bash
+# Remove the old connection
+git remote remove origin
+
+# Link to your new, empty GitHub repository
+git remote add origin [https://github.com/yourusername/YOUR_NEW_REPO_NAME.git](https://github.com/yourusername/YOUR_NEW_REPO_NAME.git)
+
+# Commit the scaffolded baseline
+git add .
+git commit -m "Initial commit: scaffolded backend and form"
+git push -u origin main
+5. Running Locally
 Start the local development server:
 
 Bash
 npm run dev
-Open http://localhost:3000 (or the port provided in your terminal) to view the portal in your browser.
+Open http://localhost:5173 to view the portal and log in with your admin credentials.
 
-📂 Project Structure
-Plaintext
-├── src/
-│   ├── components/      # Reusable UI components (buttons, modals, tables)
-│   ├── config/          # Firebase initialization and constants
-│   ├── hooks/           # Custom React hooks (data fetching, auth state)
-│   ├── pages/           # Route views (Dashboard, Users, Locations, Moderation)
-│   ├── services/        # Firestore data services and API calls
-│   └── types/           # TypeScript interfaces (Shared with mobile app)
-├── public/              # Static assets (favicons, logos)
-├── package.json
-└── README.md
-🔐 Security Notes
-Access Control: Ensure that Firestore Security Rules are configured so that only authenticated users with a specific role: "admin" claim (or document in an admins collection) can read/write data via this portal.
+👨‍💻 Developer Guide
+Updating Region and Category Types
+To modify the available dropdown/type options for your entities, update the literal types in your main model file (e.g., src/models/[entity].ts).
 
-Never commit your .env files to version control.
+How to Add a New Form Field
+Adding a new field requires updating the data model, validation, page state, and the UI components. Follow these steps:
 
-🚀 Deployment
-[Insert deployment instructions here, e.g., running npm run build and using firebase deploy --only hosting or pushing to Vercel].
+1. Update the Model & State
+In your model file (src/models/[entity].ts):
 
+Add the new field to the main Type (e.g., [Entity]).
 
-**Pro-tip:** Don't forget to update the bracketed `[Insert...]` sections with the exact tools you end up using (like Next.js vs. Vite, or Tailwind vs. Material UI) once you generate the portal code! Let me know if you want to scaffold out the actual code for this admin dashboard next.
+Add the new field to the FormState (e.g., [Entity]FormState).
+
+2. Update Validation
+In your admin library file (src/lib/[entity]Admin.ts), update the validate function:
+
+TypeScript
+if (!form.newField.trim()) errors.push("New field is required.");
+3. Update Page State & Payload
+In your main page component (src/pages/[Entity]Page.tsx):
+
+Add the default value to emptyForm.
+
+Update the useEffect block that populates setForm when an item is selected.
+
+Add the parsed field to the basePayload inside the save() function.
+
+4. Update the UI Form
+In your form component (src/components/[entity]/[Entity]Form.tsx), add the corresponding <Input /> block:
+
+TypeScript
+<div>
+  <label className="text-sm font-medium text-slate-700">New Field Name</label>
+  <Input
+    value={form.newField}
+    onChange={(e) => onChangeForm({ ...form, newField: e.target.value })}
+    placeholder="e.g. example thing"
+  />
+  <div className="text-xs text-slate-500 mt-1">
+    Contextual help text explaining what this field is used for.
+  </div>
+</div>
