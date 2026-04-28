@@ -31,13 +31,13 @@ function is__Location__Region(v: unknown): v is __Location__Region {
     v === "central" ||
     v === "north" ||
     v === "east" ||
-    v === "harbour" ||
+    v === "west" ||
     v === "south"
   );
 }
 
 function is__Location__Category(v: unknown): v is __Location__Category {
-  return v === "__;ocation__" || v === "other";
+  return v === "__category1__" || v === "other";
 }
 
 export function validate__Location__(form: __Location__FormState) {
@@ -62,10 +62,10 @@ export function validate__Location__(form: __Location__FormState) {
     errors.push("Radius should be 10–1000m.");
 
   if (!is__Location__Region(form.region))
-    errors.push("Region must be central, north, south, east or harbour.");
+    errors.push("Region must be central, north, south, east or west.");
 
   if (!is__Location__Category(form.category))
-    errors.push("Category must be __;ocation__, crater, lake, or other.");
+    errors.push("Category must be __category1__.");
 
   return {
     errors,
